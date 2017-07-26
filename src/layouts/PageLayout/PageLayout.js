@@ -5,9 +5,9 @@ import Button from '../../components/Button/Button.js';
 
 export const PageLayout = () => (
     <div>
-        <h1>Calculator</h1>
+        <h1 className="header" >Calculator</h1>
         <div className="line">
-            <Button text="0" color="dark-gray" />
+            <Button text="0" places="4" align="right" color="dark-gray" />
         </div>
         <div className="line">
             <Button text="AC" color="gray" />

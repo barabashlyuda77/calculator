@@ -17,9 +17,20 @@ class Button extends Component {
             buttonPlaces = 'button-places-1';
         } else if (this.props.places === '2') {
             buttonPlaces = 'button-places-2';
+        } else if (this.props.places === '4') {
+            buttonPlaces = 'button-places-4';
+        } else {
+            buttonPlaces = 'button-places-1';
         }
 
-        var allClasses = `button ${myClass} ${buttonPlaces}`;
+        var textAlign = '';
+        if (this.props.align === 'right') {
+            textAlign = 'button-right';
+        } else {
+            textAlign = 'button-center';
+        }
+
+        var allClasses = `button ${myClass} ${buttonPlaces} ${textAlign}`;
         
         return (
            <div className={allClasses}>
