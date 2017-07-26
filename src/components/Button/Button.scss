@@ -1,0 +1,31 @@
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    width: 100%;
+    border: 1px solid #8e8e8e;
+}
+
+.button-gray {
+    background-color: #e0e0e0;
+    color: #000;
+}
+
+.button-dark-gray {
+    background-color: #999999;
+    color: #fff;
+}
+
+.button-orange {
+    background-color: #FF8C00;
+    color: #fff;
+}
+
+.button-places-1 {
+    flex: 1;
+}
+
+.button-places-2 {
+    flex: 2;
+}
