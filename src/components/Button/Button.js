@@ -2,6 +2,10 @@ import React, {Component} from 'react';
 import './Button.scss';
 
 class Button extends Component {
+    clickHandler = () => {
+        this.props.buttonClickFunction(this.props.text);
+    }
+
     render() {
         var myClass = '';
         if (this.props.color === 'gray') {
@@ -33,7 +37,7 @@ class Button extends Component {
         var allClasses = `button ${myClass} ${buttonPlaces} ${textAlign}`;
         
         return (
-           <div className={allClasses}>
+           <div className={allClasses} onClick={this.clickHandler}>
                {this.props.text}
            </div>
         );

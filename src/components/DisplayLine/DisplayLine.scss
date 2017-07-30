@@ -1,0 +1,27 @@
+.display-line {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    width: 100%;
+    border-left: 1px solid #8e8e8e;
+    border-bottom: 1px solid #8e8e8e;
+    font-size: 20px;
+
+    &:last-of-type {
+        border-right: 1px solid #8e8e8e;
+    }
+}
+
+.display-line-dark-gray {
+    background-color: #999999;
+    color: #fff;
+}
+
+.display-line-places-4 {
+    width: 100%;
+}
+
+.display-line-right {
+    justify-content: flex-end;
+    padding: 0 20px;
+}
