@@ -16,14 +16,23 @@ class Calculator extends Component {
         var newState = {};
 
         if (this.state.displayLineText[0] === '0') {
-            newState.displayLineText = buttonNumber;
-        } else {
+            function isNumeric(n) {
+                return !isNaN(parseFloat(n)) && isFinite(n);
+            }
+
+            if (isNumeric(buttonNumber)) {
+                newState.displayLineText = buttonNumber;
+            }
+        } else if (buttonNumber === 'AC') {
+            newState.displayLineText = '0';
+        }
+        else {
             newState.displayLineText = this.state.displayLineText + buttonNumber;
         }
 
         this.setState(newState);
     }
-    
+
     render() {
         return (
             <div>
