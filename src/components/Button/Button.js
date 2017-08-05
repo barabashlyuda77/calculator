@@ -3,7 +3,7 @@ import './Button.scss';
 
 class Button extends Component {
     clickHandler = () => {
-        this.props.buttonClickFunction(this.props.text);
+        this.props.buttonIsClicked(this.props.text);
     }
 
     render() {
