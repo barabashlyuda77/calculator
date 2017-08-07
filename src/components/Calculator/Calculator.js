@@ -6,8 +6,8 @@ import DisplayLine from '../../components/DisplayLine/DisplayLine.js';
 
 class Calculator extends Component {
     state = {
-        displayLineText: '0',
-        previousDisplayLineText: '',
+        displayLineText: 0,
+        previousDisplayLineText: undefined,
         plusWasPressed: false
     };
 
@@ -17,36 +17,33 @@ class Calculator extends Component {
 
         var newState = {};
 
-        if (this.state.displayLineText[0] === '0') {
-            function isNumeric(n) {
-                return !isNaN(parseFloat(n)) && isFinite(n);
-            }
+        if (this.state.displayLineText === 0) {
 
-            if (isNumeric(buttonNumber)) {
-                newState.displayLineText = buttonNumber;
+            if (Number.isFinite(Number(buttonNumber))) {
+                newState.displayLineText = Number(buttonNumber);
             }
         } else if (buttonNumber === 'AC') {
-            newState.displayLineText = '0';
-            newState.previousDisplayLineText = '';
+            newState.displayLineText = 0;
+            newState.previousDisplayLineText = undefined;
             newState.plusWasPressed = false;
         } else if (buttonNumber === '+') {
             newState.previousDisplayLineText = this.state.displayLineText;
-            if (this.state.previousDisplayLineText !== '') {
-                newState.previousDisplayLineText = Number(this.state.previousDisplayLineText)
-                    + Number(this.state.displayLineText);
+            if (this.state.previousDisplayLineText !== undefined) {
+                newState.previousDisplayLineText = this.state.previousDisplayLineText
+                    + this.state.displayLineText;
             }
             newState.plusWasPressed = true;
         } else if (buttonNumber === '=') {
-            newState.displayLineText = Number(this.state.displayLineText)
-                + Number(this.state.previousDisplayLineText);
-            newState.previousDisplayLineText = '';
+            newState.displayLineText = this.state.displayLineText
+                + this.state.previousDisplayLineText;
+            newState.previousDisplayLineText = undefined;
         }
         else {
             if (this.state.plusWasPressed === true) {
-                newState.displayLineText = buttonNumber;
+                newState.displayLineText = Number(buttonNumber);
                 newState.plusWasPressed = false;
             } else {
-                newState.displayLineText = this.state.displayLineText + buttonNumber;
+                newState.displayLineText = Number(String(this.state.displayLineText) + buttonNumber);
             }
         }
 
