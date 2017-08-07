@@ -7,6 +7,8 @@ import DisplayLine from '../../components/DisplayLine/DisplayLine.js';
 class Calculator extends Component {
     state = {
         displayLineText: '0',
+        previousDisplayLineText: '',
+        plusWasPressed: false
     };
 
     // buttonNumber - это клавиша, которую ты нажала
@@ -25,9 +27,27 @@ class Calculator extends Component {
             }
         } else if (buttonNumber === 'AC') {
             newState.displayLineText = '0';
+            newState.previousDisplayLineText = '';
+            newState.plusWasPressed = false;
+        } else if (buttonNumber === '+') {
+            newState.previousDisplayLineText = this.state.displayLineText;
+            if (this.state.previousDisplayLineText !== '') {
+                newState.previousDisplayLineText = Number(this.state.previousDisplayLineText)
+                    + Number(this.state.displayLineText);
+            }
+            newState.plusWasPressed = true;
+        } else if (buttonNumber === '=') {
+            newState.displayLineText = Number(this.state.displayLineText)
+                + Number(this.state.previousDisplayLineText);
+            newState.previousDisplayLineText = '';
         }
         else {
-            newState.displayLineText = this.state.displayLineText + buttonNumber;
+            if (this.state.plusWasPressed === true) {
+                newState.displayLineText = buttonNumber;
+                newState.plusWasPressed = false;
+            } else {
+                newState.displayLineText = this.state.displayLineText + buttonNumber;
+            }
         }
 
         this.setState(newState);
