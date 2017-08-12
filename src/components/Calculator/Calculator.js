@@ -8,59 +8,106 @@ class Calculator extends Component {
     state = {
         displayLineText: 0,
         previousDisplayLineText: undefined,
-        signWasPressed: undefined
+        signWasPressed: undefined,
+        previousButton: undefined
     };
 
-    // buttonNumber - это клавиша, которую ты нажала
     buttonIsClicked = (buttonNumber) => {
-        console.log(`Button ${buttonNumber} was clicked`);
-        console.log(`state:`, this.state);
-
-        var newState = {};
-
         if (this.state.displayLineText === 0) {
-
             if (Number.isFinite(Number(buttonNumber))) {
-                newState.displayLineText = Number(buttonNumber);
+                this.updateState(
+                    Number(buttonNumber),
+                    this.state.previousDisplayLineText,
+                    this.state.signWasPressed,
+                    buttonNumber
+                );
             }
         } else if (buttonNumber === 'AC') {
-            newState.displayLineText = 0;
-            newState.previousDisplayLineText = undefined;
-            newState.signWasPressed = undefined;
+            this.updateState(
+                0,
+                undefined,
+                undefined
+            );
         } else if (buttonNumber === '+') {
-            newState.previousDisplayLineText = this.state.displayLineText;
-            if (this.state.previousDisplayLineText !== undefined) {
-                newState.previousDisplayLineText = this.state.previousDisplayLineText
-                    + this.state.displayLineText;
+            if (this.state.previousDisplayLineText === undefined) {
+                this.updateState(
+                    this.state.displayLineText,
+                    this.state.displayLineText,
+                    '+',
+                    buttonNumber
+                );
+            } else {
+                var result = undefined;
+                if (this.state.signWasPressed === '+') {
+                    result = this.state.previousDisplayLineText + this.state.displayLineText;
+                } else if (this.state.signWasPressed === '-') {
+                    result = this.state.previousDisplayLineText - this.state.displayLineText;
+                }
+                this.updateState(
+                    result,
+                    result,
+                    '+'
+                );
             }
-            newState.signWasPressed = '+';
         } else if (buttonNumber === '-') {
-            newState.previousDisplayLineText = this.state.displayLineText;
-            if (this.state.previousDisplayLineText !== undefined) {
-                newState.previousDisplayLineText = this.state.previousDisplayLineText
-                    + this.state.displayLineText;
+            if (this.state.previousDisplayLineText === undefined) {
+                this.updateState(
+                    this.state.displayLineText,
+                    this.state.displayLineText,
+                    '-'
+                );
+            } else {
+                var result = undefined;
+                if (this.state.signWasPressed === '+') {
+                    result = this.state.previousDisplayLineText + this.state.displayLineText;
+                } else if (this.state.signWasPressed === '-') {
+                    result = this.state.previousDisplayLineText - this.state.displayLineText;
+                }
+                this.updateState(
+                    result,
+                    result,
+                    '-'
+                );
             }
-            newState.signWasPressed = '-';
         } else if (buttonNumber === '=') {
             if (this.state.signWasPressed === '+') {
-                newState.displayLineText = this.state.displayLineText
-                + this.state.previousDisplayLineText;
+                this.updateState(
+                    this.state.displayLineText + this.state.previousDisplayLineText,
+                    undefined,
+                    this.state.signWasPressed
+                );
+            } else if (this.state.signWasPressed === '-') {
+                this.updateState(
+                    this.state.previousDisplayLineText - this.state.displayLineText,
+                    undefined,
+                    this.state.signWasPressed
+                );
             }
-            if (this.state.signWasPressed === '-') {
-                newState.displayLineText = this.state.previousDisplayLineText
-                    - this.state.displayLineText;
-            }
-            newState.previousDisplayLineText = undefined;
-        }
-        else {
-            if (this.state.signWasPressed !== undefined) {
-                newState.displayLineText = Number(buttonNumber);
-                // newState.signWasPressed = undefined;
+        } else {
+            if (!Number.isFinite(Number(this.state.previousButton))) {
+                this.updateState(
+                    Number(buttonNumber),
+                    this.state.previousDisplayLineText,
+                    this.state.signWasPressed
+                );
             } else {
-                newState.displayLineText = Number(String(this.state.displayLineText) + buttonNumber);
+                this.updateState(
+                    Number(String(this.state.displayLineText) + buttonNumber),
+                    this.state.previousDisplayLineText,
+                    this.state.signWasPressed
+                );
             }
         }
+    }
 
+    updateState = (newDisplayLineText, newPreviousDisplayLineText,
+                    newSignWasPressed, newPreviousButton) => {
+        var newState = {
+            displayLineText: newDisplayLineText,
+            previousDisplayLineText: newPreviousDisplayLineText,
+            signWasPressed: newSignWasPressed,
+            previousButton: newPreviousButton
+        };
         this.setState(newState);
     }
 
@@ -71,9 +118,7 @@ class Calculator extends Component {
                     <DisplayLine text={this.state.displayLineText} />
                 </div>
                 <div className="line">
-                    <Button text="AC" color="gray" buttonIsClicked={this.buttonIsClicked} />
-                    <Button text="+/-" color="gray" buttonIsClicked={this.buttonIsClicked} />
-                    <Button text="%" color="gray" buttonIsClicked={this.buttonIsClicked} />
+                    <Button text="AC" color="gray" places="3" buttonIsClicked={this.buttonIsClicked} />
                     <Button text="/" color="orange" buttonIsClicked={this.buttonIsClicked} />
                 </div>
                 <div className="line">

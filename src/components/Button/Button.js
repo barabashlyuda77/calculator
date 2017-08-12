@@ -21,6 +21,8 @@ class Button extends Component {
             buttonPlaces = 'button-places-1';
         } else if (this.props.places === '2') {
             buttonPlaces = 'button-places-2';
+        } else if (this.props.places === '3') {
+            buttonPlaces = 'button-places-3';
         } else if (this.props.places === '4') {
             buttonPlaces = 'button-places-4';
         } else {
