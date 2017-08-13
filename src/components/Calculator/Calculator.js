@@ -26,9 +26,14 @@ class Calculator extends Component {
             this.updateState(
                 0,
                 undefined,
-                undefined
+                undefined,
+                buttonNumber
             );
         } else if (buttonNumber === '+') {
+            this.updateSignWasPressed('+');
+            if (this.isPreviousButtonSign() === true){
+                return;
+            }
             if (this.state.previousDisplayLineText === undefined) {
                 this.updateState(
                     this.state.displayLineText,
@@ -46,15 +51,21 @@ class Calculator extends Component {
                 this.updateState(
                     result,
                     result,
-                    '+'
+                    '+',
+                    buttonNumber
                 );
             }
         } else if (buttonNumber === '-') {
+            this.updateSignWasPressed('-');
+            if (this.isPreviousButtonSign() === true){
+                return;
+            }
             if (this.state.previousDisplayLineText === undefined) {
                 this.updateState(
                     this.state.displayLineText,
                     this.state.displayLineText,
-                    '-'
+                    '-',
+                    buttonNumber
                 );
             } else {
                 var result = undefined;
@@ -66,35 +77,43 @@ class Calculator extends Component {
                 this.updateState(
                     result,
                     result,
-                    '-'
+                    '-',
+                    buttonNumber
                 );
             }
         } else if (buttonNumber === '=') {
+            if (this.state.previousButton === '=') {
+                return;
+            }
             if (this.state.signWasPressed === '+') {
                 this.updateState(
                     this.state.displayLineText + this.state.previousDisplayLineText,
                     undefined,
-                    this.state.signWasPressed
+                    this.state.signWasPressed,
+                    buttonNumber
                 );
             } else if (this.state.signWasPressed === '-') {
                 this.updateState(
                     this.state.previousDisplayLineText - this.state.displayLineText,
                     undefined,
-                    this.state.signWasPressed
+                    this.state.signWasPressed,
+                    buttonNumber
                 );
             }
         } else {
-            if (!Number.isFinite(Number(this.state.previousButton))) {
-                this.updateState(
-                    Number(buttonNumber),
-                    this.state.previousDisplayLineText,
-                    this.state.signWasPressed
-                );
-            } else {
+            if (Number.isFinite(Number(this.state.previousButton))) {
                 this.updateState(
                     Number(String(this.state.displayLineText) + buttonNumber),
                     this.state.previousDisplayLineText,
-                    this.state.signWasPressed
+                    this.state.signWasPressed,
+                    buttonNumber
+                );
+            } else {
+                this.updateState(
+                    Number(buttonNumber),
+                    this.state.previousDisplayLineText,
+                    this.state.signWasPressed,
+                    buttonNumber
                 );
             }
         }
@@ -109,6 +128,24 @@ class Calculator extends Component {
             previousButton: newPreviousButton
         };
         this.setState(newState);
+    }
+
+    updateSignWasPressed = (newSignWasPressed) => {
+        var newState ={
+            signWasPressed: newSignWasPressed
+        }
+        this.setState(newState);
+    }
+
+    isPreviousButtonSign = () => {
+        if ((this.state.previousButton === '+')
+            || (this.state.previousButton === '-')
+            || (this.state.previousButton === '*')
+            || (this.state.previousButton === '/')) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     render() {
