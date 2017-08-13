@@ -13,126 +13,122 @@ class Calculator extends Component {
     };
 
     buttonIsClicked = (buttonNumber) => {
-        if (this.state.displayLineText === 0) {
-            if (Number.isFinite(Number(buttonNumber))) {
-                this.updateState(
-                    Number(buttonNumber),
-                    this.state.previousDisplayLineText,
-                    this.state.signWasPressed,
-                    buttonNumber
-                );
-            }
-        } else if (buttonNumber === 'AC') {
-            this.updateState(
-                0,
-                undefined,
-                undefined,
-                buttonNumber
-            );
-        } else if (buttonNumber === '+') {
-            this.updateSignWasPressed('+');
-            if (this.isPreviousButtonSign() === true){
-                return;
-            }
-            if (this.state.previousDisplayLineText === undefined) {
-                this.updateState(
-                    this.state.displayLineText,
-                    this.state.displayLineText,
-                    '+',
-                    buttonNumber
-                );
-            } else {
-                var result = undefined;
-                if (this.state.signWasPressed === '+') {
-                    result = this.state.previousDisplayLineText + this.state.displayLineText;
-                } else if (this.state.signWasPressed === '-') {
-                    result = this.state.previousDisplayLineText - this.state.displayLineText;
+        this.updatePreviousButton(buttonNumber);
+        switch (buttonNumber) {
+            case 'AC':
+                this.updateDisplayLineText(0);
+                this.updatePreviousDisplayLineText(undefined);
+                this.updateSignWasPressed(undefined);
+                break;
+            case '+':
+                this.updateSignWasPressed('+');
+                if (this.isPreviousButtonSign() === true) {
+                    return;
                 }
-                this.updateState(
-                    result,
-                    result,
-                    '+',
-                    buttonNumber
-                );
-            }
-        } else if (buttonNumber === '-') {
-            this.updateSignWasPressed('-');
-            if (this.isPreviousButtonSign() === true){
-                return;
-            }
-            if (this.state.previousDisplayLineText === undefined) {
-                this.updateState(
-                    this.state.displayLineText,
-                    this.state.displayLineText,
-                    '-',
-                    buttonNumber
-                );
-            } else {
-                var result = undefined;
-                if (this.state.signWasPressed === '+') {
-                    result = this.state.previousDisplayLineText + this.state.displayLineText;
-                } else if (this.state.signWasPressed === '-') {
-                    result = this.state.previousDisplayLineText - this.state.displayLineText;
+                if (this.state.previousDisplayLineText === undefined) {
+                    this.updatePreviousDisplayLineText(this.state.displayLineText);
+                } else {
+                    var result = this.getSignWasPressed();
+                    this.updateDisplayLineText(result);
+                    this.updatePreviousDisplayLineText(result);
                 }
-                this.updateState(
-                    result,
-                    result,
-                    '-',
-                    buttonNumber
-                );
-            }
-        } else if (buttonNumber === '=') {
-            if (this.state.previousButton === '=') {
-                return;
-            }
-            if (this.state.signWasPressed === '+') {
-                this.updateState(
-                    this.state.displayLineText + this.state.previousDisplayLineText,
-                    undefined,
-                    this.state.signWasPressed,
-                    buttonNumber
-                );
-            } else if (this.state.signWasPressed === '-') {
-                this.updateState(
-                    this.state.previousDisplayLineText - this.state.displayLineText,
-                    undefined,
-                    this.state.signWasPressed,
-                    buttonNumber
-                );
-            }
-        } else {
-            if (Number.isFinite(Number(this.state.previousButton))) {
-                this.updateState(
-                    Number(String(this.state.displayLineText) + buttonNumber),
-                    this.state.previousDisplayLineText,
-                    this.state.signWasPressed,
-                    buttonNumber
-                );
-            } else {
-                this.updateState(
-                    Number(buttonNumber),
-                    this.state.previousDisplayLineText,
-                    this.state.signWasPressed,
-                    buttonNumber
-                );
-            }
+                break;
+            case '-':
+                this.updateSignWasPressed('-');
+                if (this.isPreviousButtonSign() === true) {
+                    return;
+                }
+                if (this.state.previousDisplayLineText === undefined) {
+                    this.updatePreviousDisplayLineText(this.state.displayLineText);
+                } else {
+                    var result = this.getSignWasPressed();
+                    this.updateDisplayLineText(result);
+                    this.updatePreviousDisplayLineText(result);
+                }
+                break;
+            case 'x':
+                this.updateSignWasPressed('x');
+                if (this.isPreviousButtonSign() === true) {
+                    return;
+                }
+                if (this.state.previousDisplayLineText === undefined) {
+                    this.updatePreviousDisplayLineText(this.state.displayLineText);
+                } else {
+                    var result = this.getSignWasPressed();
+                    this.updateDisplayLineText(result);
+                    this.updatePreviousDisplayLineText(result);
+                }
+                break;
+            case '/':
+                this.updateSignWasPressed('/');
+                if (this.isPreviousButtonSign() === true) {
+                    return;
+                }
+                if (this.state.previousDisplayLineText === undefined) {
+                    this.updatePreviousDisplayLineText(this.state.displayLineText);
+                } else {
+                    var result = this.getSignWasPressed();
+                    this.updateDisplayLineText(result);
+                    this.updatePreviousDisplayLineText(result);
+                }
+                break;
+
+            case '=':
+                if (this.state.previousButton === '=') {
+                    return;
+                }
+                this.updatePreviousDisplayLineText(undefined);
+                if (this.state.signWasPressed === '+') {
+                    this.updateDisplayLineText(this.state.previousDisplayLineText
+                        + this.state.displayLineText);
+                } else if (this.state.signWasPressed === '-') {
+                    this.updateDisplayLineText(this.state.previousDisplayLineText
+                        - this.state.displayLineText);
+                } else if (this.state.signWasPressed === 'x') {
+                    this.updateDisplayLineText(this.state.previousDisplayLineText
+                        * this.state.displayLineText); 
+                } else if (this.state.signWasPressed === '/') {
+                    this.updateDisplayLineText(this.state.previousDisplayLineText
+                        / this.state.displayLineText);
+                }
+                break;
+            default:
+                if (this.state.displayLineText === 0) {
+                    this.updateDisplayLineText(Number(buttonNumber));
+                }
+                if (Number.isFinite(Number(this.state.previousButton))) {
+                    this.updateDisplayLineText(Number(String(this.state.displayLineText)
+                        + buttonNumber));
+                } else {
+                    this.updateDisplayLineText(Number(buttonNumber));
+                }
         }
     }
 
-    updateState = (newDisplayLineText, newPreviousDisplayLineText,
-                    newSignWasPressed, newPreviousButton) => {
+    updateDisplayLineText = (newDisplayLineText) => {
         var newState = {
-            displayLineText: newDisplayLineText,
-            previousDisplayLineText: newPreviousDisplayLineText,
-            signWasPressed: newSignWasPressed,
-            previousButton: newPreviousButton
-        };
+            displayLineText: newDisplayLineText
+        }
+        this.setState(newState);
+    }
+
+    updatePreviousDisplayLineText = (newPreviousDisplayLineText) => {
+        var newState = {
+            previousDisplayLineText: newPreviousDisplayLineText
+        }
         this.setState(newState);
     }
 
     updateSignWasPressed = (newSignWasPressed) => {
-        var newState ={
+        var newState = {
             signWasPressed: newSignWasPressed
+        }
+        this.setState(newState);
+    }
+
+    updatePreviousButton = (newPreviousButton) => {
+        var newState = {
+            previousButton: newPreviousButton
         }
         this.setState(newState);
     }
@@ -140,12 +136,26 @@ class Calculator extends Component {
     isPreviousButtonSign = () => {
         if ((this.state.previousButton === '+')
             || (this.state.previousButton === '-')
-            || (this.state.previousButton === '*')
+            || (this.state.previousButton === 'x')
             || (this.state.previousButton === '/')) {
             return true;
         } else {
             return false;
         }
+    }
+
+    getSignWasPressed = () => {
+        var result = undefined;
+        if (this.state.signWasPressed === '+') {
+            result = this.state.previousDisplayLineText + this.state.displayLineText;
+        } else if (this.state.signWasPressed === '-') {
+            result = this.state.previousDisplayLineText - this.state.displayLineText;
+        } else if (this.state.signWasPressed === 'x') {
+            result = this.state.previousDisplayLineText * this.state.displayLineText;
+        } else if (this.state.signWasPressed === '/') {
+            result = this.state.previousDisplayLineText / this.state.displayLineText;
+        }
+        return result;
     }
 
     render() {
