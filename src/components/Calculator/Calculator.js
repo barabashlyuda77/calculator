@@ -74,6 +74,7 @@ class Calculator extends Component {
                 break;
 
             case '=':
+            console.log('=');
                 if (this.state.previousButton === '=') {
                     return;
                 }
@@ -94,8 +95,11 @@ class Calculator extends Component {
                     this.updateDisplayLineText(buttonNumber);
                 }
                 if (Number.isFinite(Number(this.state.previousButton))) {
-                    this.updateDisplayLineText(String(Number(this.state.displayLineText)
-                        + Number(buttonNumber)));
+                    this.updateDisplayLineText(this.state.displayLineText
+                        + buttonNumber);
+                } else if (this.state.previousButton === '.') {
+                    this.updateDisplayLineText(this.state.displayLineText
+                        + buttonNumber);
                 } else {
                     this.updateDisplayLineText(buttonNumber);
                 }
