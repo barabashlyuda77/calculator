@@ -6,7 +6,7 @@ import DisplayLine from '../../components/DisplayLine/DisplayLine.js';
 
 class Calculator extends Component {
     state = {
-        displayLineText: 0,
+        displayLineText: '0',
         previousDisplayLineText: undefined,
         signWasPressed: undefined,
         previousButton: undefined
@@ -16,7 +16,7 @@ class Calculator extends Component {
         this.updatePreviousButton(buttonNumber);
         switch (buttonNumber) {
             case 'AC':
-                this.updateDisplayLineText(0);
+                this.updateDisplayLineText('0');
                 this.updatePreviousDisplayLineText(undefined);
                 this.updateSignWasPressed(undefined);
                 break;
@@ -79,28 +79,25 @@ class Calculator extends Component {
                 }
                 this.updatePreviousDisplayLineText(undefined);
                 if (this.state.signWasPressed === '+') {
-                    this.updateDisplayLineText(this.state.previousDisplayLineText
-                        + this.state.displayLineText);
+                    this.updateDisplayLineText(this.plus());
                 } else if (this.state.signWasPressed === '-') {
-                    this.updateDisplayLineText(this.state.previousDisplayLineText
-                        - this.state.displayLineText);
+                    this.updateDisplayLineText(this.minus());
                 } else if (this.state.signWasPressed === 'x') {
-                    this.updateDisplayLineText(this.state.previousDisplayLineText
-                        * this.state.displayLineText); 
+                    this.updateDisplayLineText(this.multiply()); 
                 } else if (this.state.signWasPressed === '/') {
-                    this.updateDisplayLineText(this.state.previousDisplayLineText
-                        / this.state.displayLineText);
+                    this.updateDisplayLineText(this.divide());
                 }
                 break;
+                
             default:
                 if (this.state.displayLineText === 0) {
-                    this.updateDisplayLineText(Number(buttonNumber));
+                    this.updateDisplayLineText(buttonNumber);
                 }
                 if (Number.isFinite(Number(this.state.previousButton))) {
-                    this.updateDisplayLineText(Number(String(this.state.displayLineText)
-                        + buttonNumber));
+                    this.updateDisplayLineText(String(Number(this.state.displayLineText)
+                        + Number(buttonNumber)));
                 } else {
-                    this.updateDisplayLineText(Number(buttonNumber));
+                    this.updateDisplayLineText(buttonNumber);
                 }
         }
     }
@@ -147,15 +144,35 @@ class Calculator extends Component {
     getSignWasPressed = () => {
         var result = undefined;
         if (this.state.signWasPressed === '+') {
-            result = this.state.previousDisplayLineText + this.state.displayLineText;
+            result = this.plus();
         } else if (this.state.signWasPressed === '-') {
-            result = this.state.previousDisplayLineText - this.state.displayLineText;
+            result = this.minus();
         } else if (this.state.signWasPressed === 'x') {
-            result = this.state.previousDisplayLineText * this.state.displayLineText;
+            result = this.multiply();
         } else if (this.state.signWasPressed === '/') {
-            result = this.state.previousDisplayLineText / this.state.displayLineText;
+            result = this.divide();
         }
-        return result;
+        return String(result);
+    }
+
+    plus = () => {
+        return Number(this.state.previousDisplayLineText)
+        + Number(this.state.displayLineText)
+    } 
+
+    minus = () => {
+        return Number(this.state.previousDisplayLineText)
+        - Number(this.state.displayLineText)
+    }
+
+    multiply = () => {
+        return Number(this.state.previousDisplayLineText)
+        * Number(this.state.displayLineText)
+    }
+
+    divide = () => {
+        return Number(this.state.previousDisplayLineText)
+        / Number(this.state.displayLineText)
     }
 
     render() {
